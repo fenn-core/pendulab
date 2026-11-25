@@ -1,7 +1,7 @@
 #ifndef PENDULAB_DYNAMICS_H
 #define PENDULAB_DYNAMICS_H
 
-#include "precision.h"
+#include "pendulab/precision.h"
 
 
 typedef struct
@@ -29,6 +29,10 @@ typedef struct
     real_t l;
     real_t g;
 } parameters_t;
+
+
+state_derivative_t pendulab_derivative(const state_t *state, const parameters_t *params,
+                                       double F);
 
 
 #endif // PENDULAB_DYNAMICS_H

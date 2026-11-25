@@ -1,5 +1,5 @@
-#include "dynamics.h"
-#include "precision.h"
+#include "pendulab/dynamics.h"
+#include "pendulab/precision.h"
 
 
 state_derivative_t pendulab_derivative(const state_t *state, const parameters_t *params,

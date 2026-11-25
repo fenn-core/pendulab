@@ -6,6 +6,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 add_executable(pendulab
         src/main.c
         src/dynamics.c
+        src/integrator.c
         src/integrator.c)
 
 target_include_directories(pendulab
