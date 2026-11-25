@@ -27,3 +27,35 @@ state_derivative_t pendulab_derivative(const state_t *state, const parameters_t 
 
     return state_derivative;
 }
+
+
+real_t pendulab_energy(const state_t *state, const parameters_t *params)
+{
+    const real_t v = state->v;
+    const real_t omega = state->omega;
+    const real_t theta = state->theta;
+    const real_t l = params->l;
+    const real_t m = params->m;
+    const real_t M = params->M;
+    const real_t g = params->g;
+
+    const real_t kinetic_energy = 0.5 * (M + m) * v * v + m * l * v * omega * REAL_COS(theta) +
+        0.5 * m * l * l * omega * omega;
+
+    const real_t potential_energy = m * g * l * REAL_COS(theta);
+
+    return kinetic_energy + potential_energy;
+}
+
+
+real_t pendulab_momentum(const state_t *state, const parameters_t *params)
+{
+    const real_t v = state->v;
+    const real_t omega = state->omega;
+    const real_t theta = state->theta;
+    const real_t l = params->l;
+    const real_t m = params->m;
+    const real_t M = params->M;
+
+    return (M + m) * v + m * l * omega * REAL_COS(theta);
+}

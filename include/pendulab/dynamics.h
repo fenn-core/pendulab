@@ -35,4 +35,10 @@ state_derivative_t pendulab_derivative(const state_t *state, const parameters_t 
                                        double F);
 
 
+real_t pendulab_energy(const state_t *state, const parameters_t *params);
+
+
+real_t pendulab_momentum(const state_t *state, const parameters_t *params);
+
+
 #endif // PENDULAB_DYNAMICS_H
