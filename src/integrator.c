@@ -19,8 +19,6 @@ static state_t pendulab_advance(const state_t *state,
 state_t pendulab_rk4(const state_t *state, const parameters_t *params, real_t F,
                      real_t dt)
 {
-    const state_derivative_t derivative = pendulab_derivative(state, params, F);
-
     const state_derivative_t k1 = pendulab_derivative(state, params, F);
 
     const state_t k2_state = pendulab_advance(state, &k1, 0.5 * dt);
