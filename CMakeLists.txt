@@ -15,11 +15,13 @@ add_compile_options(
 
 
 add_library(pendulab_core STATIC src/dynamics.c
-        src/integrator.c)
+        src/integrator.c
+        include/pendulab/controller.h
+        src/controller.c)
 
 target_include_directories(pendulab_core
         PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include
-)
+        PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/constants)
 
 
 add_executable(pendulab_sim
