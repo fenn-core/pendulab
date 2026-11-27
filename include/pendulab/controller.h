@@ -10,7 +10,7 @@ typedef struct
     real_t kx;
     real_t ktheta;
     real_t kv;
-    real_t omega;
+    real_t komega;
 } lqr_gains_t;
 
 
