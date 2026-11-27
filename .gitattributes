@@ -1,4 +1,4 @@
-# Codex-generated visualization and plotting scripts
+# generated visualization and plotting scripts
 tools/visualizer/** linguist-generated=true
 tools/plotting/** linguist-generated=true
 constants/** linguist-generated=true

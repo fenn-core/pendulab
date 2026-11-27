@@ -33,8 +33,7 @@ else:
 
         print("Invalid selection.")
 
-    print(f"\nLoading: {CSV.name}")
-
+print(f"\nLoading: {CSV.name}")
 
 data = np.genfromtxt(CSV, delimiter=",", names=True)
 
@@ -49,17 +48,35 @@ F = data["F"]
 E = data["E"]
 px = data["px"]
 
+# backward compatibility with older result files
+has_commanded_force = "F_cmd" in data.dtype.names
+F_cmd = data["F_cmd"] if has_commanded_force else F
+
+saturated = F_cmd != F
+
+peak_cmd = np.max(np.abs(F_cmd))
+peak_applied = np.max(np.abs(F))
+saturation_pct = 100 * np.mean(saturated)
+
 dE = E - E[0]
 dpx = px - px[0]
 
-# Numerical diagnostics
+# numerical diagnostics
 print("\n=== Pendulab simulation ===")
 print(f"Samples:          {len(t)}")
 print(f"Duration:         {t[-1] - t[0]:.6f} s")
 print(f"Mean timestep:    {np.mean(np.diff(t)):.6e} s")
 print(f"Initial energy:   {E[0]:.10e} J")
 print(f"Initial momentum: {px[0]:.10e} kg m/s")
-print(f"Maximum force:    {np.max(np.abs(F)):.10e} N")
+
+print("\n=== Actuator diagnostics ===")
+print(f"Peak applied force:   {peak_applied:.6f} N")
+
+if has_commanded_force:
+    print(f"Peak commanded force: {peak_cmd:.6f} N")
+    print(f"Saturated samples:    {np.count_nonzero(saturated)}")
+    print(f"Saturation ratio:     {saturation_pct:.2f}%")
+    print(f"Peak rejected force:  {np.max(np.abs(F_cmd - F)):.6f} N")
 
 if np.all(F == 0):
     print("\n=== Conservation diagnostics ===")
@@ -74,14 +91,14 @@ else:
         "are not necessarily numerical errors."
     )
 
-# Visualization
+# visualization
 fig, axes = plt.subplots(3, 3, figsize=(16, 10), sharex=True)
 fig.suptitle("Pendulab — Single Pendulum Dynamics")
 
 plots = [
     (x, "Cart position", "x [m]"),
     (theta, "Pendulum angle", "θ [rad]"),
-    (F, "Applied force", "F [N]"),
+    (None, "Actuator force", "F [N]"),
     (v, "Cart velocity", "v [m/s]"),
     (omega, "Angular velocity", "ω [rad/s]"),
     (E, "Mechanical energy", "E [J]"),
@@ -91,10 +108,42 @@ plots = [
 ]
 
 for ax, (values, title, ylabel) in zip(axes.flat, plots):
-    ax.plot(t, values, linewidth=1)
+    if values is not None:
+        ax.plot(t, values, linewidth=1)
+
     ax.set_title(title)
     ax.set_ylabel(ylabel)
     ax.grid(alpha=0.25)
+
+# dedicated actuator plot
+ax = axes[0, 2]
+
+if has_commanded_force:
+    ax.plot(
+        t,
+        F_cmd,
+        linestyle="--",
+        linewidth=1.2,
+        color="tab:orange",
+        label=f"Commanded (peak {peak_cmd:.2f} N)",
+    )
+
+    ax.fill_between(
+        t,
+        F_cmd,
+        F,
+        where=saturated,
+        color="tab:red",
+        alpha=0.18,
+        label=f"Saturation ({saturation_pct:.2f}%)",
+    )
+
+ax.plot(
+    t, F, color="tab:blue", linewidth=1.5, label=f"Applied (peak {peak_applied:.2f} N)"
+)
+
+ax.axhline(0, color="gray", linewidth=0.6)
+ax.legend(loc="best", fontsize=8)
 
 for ax in axes[-1]:
     ax.set_xlabel("Time [s]")
