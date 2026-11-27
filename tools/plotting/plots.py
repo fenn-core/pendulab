@@ -5,7 +5,36 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 ROOT = Path(__file__).resolve().parents[2]
-CSV = Path(sys.argv[1]) if len(sys.argv) > 1 else ROOT / "results/simulation.csv"
+RESULTS = ROOT / "results"
+
+if len(sys.argv) > 1:
+    CSV = Path(sys.argv[1])
+else:
+    files = sorted(RESULTS.glob("*.csv"))
+
+    if not files:
+        sys.exit("No CSV files found under results/")
+
+    print("Available result files:\n")
+
+    for i, file in enumerate(files, start=1):
+        print(f"{i}. {file.name}")
+
+    while True:
+        try:
+            choice = int(input("\nSelect file number: "))
+
+            if 1 <= choice <= len(files):
+                CSV = files[choice - 1]
+                break
+
+        except ValueError:
+            pass
+
+        print("Invalid selection.")
+
+    print(f"\nLoading: {CSV.name}")
+
 
 data = np.genfromtxt(CSV, delimiter=",", names=True)
 
