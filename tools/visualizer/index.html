@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#0c1215">
+  <title>Pendulab | Simulation visualizer</title>
+  <link rel="stylesheet" href="styles/base.css">
+  <link rel="stylesheet" href="styles/layout.css">
+  <link rel="stylesheet" href="styles/components.css">
+</head>
+<body>
+  <div class="app" id="drop-zone">
+    <header class="masthead">
+      <div class="brand"><span class="brand-mark" aria-hidden="true">◉</span><div><strong>PENDULAB</strong><small>SIMULATION VISUALIZER <span class="version">/ 01</span></small></div></div>
+      <div class="header-details">
+        <div class="header-stat"><span>CONFIGURATION</span><strong>Single inverted pendulum</strong></div>
+        <div class="header-stat"><span>DATASET</span><strong id="dataset-name">No dataset</strong></div>
+        <div class="header-stat"><span>DURATION</span><strong id="duration">—</strong></div>
+        <div class="header-stat"><span>STATUS</span><strong id="status" class="status">STANDBY</strong></div>
+      </div>
+      <div class="load-actions"><button id="demo-button" class="button subtle">Load demo</button><label class="button primary">Open CSV<input id="file-input" type="file" accept=".csv,text/csv" hidden></label></div>
+    </header>
+
+    <main class="workspace">
+      <section class="mechanical panel" aria-label="Mechanical visualization">
+        <div class="panel-heading"><div><span class="eyebrow">01 / MECHANICAL VIEW</span><h1>Cart–pendulum assembly</h1></div><div class="panel-heading-right"><span class="live-dot"></span><span>RECORDED STATE</span></div></div>
+        <div class="mechanical-stage"><canvas id="mechanical-canvas" aria-label="Cart and pendulum animation"></canvas><div class="stage-corner top-left">REFERENCE FRAME <span>O-XY</span></div><div class="stage-corner bottom-left">θ = 0 UPRIGHT · +θ RIGHT</div><div class="stage-corner bottom-right" id="sample-readout">SAMPLE — / —</div></div>
+        <div class="mechanical-options"><label><input id="show-reference" type="checkbox" checked> Upright reference</label><label><input id="show-trail" type="checkbox"> Mass trail</label><label><input id="show-axes" type="checkbox" checked> Coordinate axes</label><div class="geometry-control"><label for="length-input">LINK LENGTH</label><input id="length-input" type="number" min="0.001" step="0.01" value="0.3" aria-label="Pendulum length in meters"><span>m</span><span class="source-tag" title="From targets/sim/main.c">PROJECT PRESET</span></div></div>
+      </section>
+
+      <aside class="telemetry panel" aria-label="Live telemetry">
+        <div class="panel-heading"><div><span class="eyebrow">02 / LIVE TELEMETRY</span><h2>Recorded channels</h2></div><label class="precision-control">DIGITS <select id="precision"><option>3</option><option selected>5</option><option>7</option></select></label></div>
+        <div id="telemetry-list" class="telemetry-list"></div>
+        <div class="diagnostics" id="diagnostics"></div>
+      </aside>
+
+      <section class="playback panel" aria-label="Playback controls">
+        <div class="transport"><button id="restart" class="icon-button" title="Restart (Home)" aria-label="Restart">↺</button><button id="back" class="icon-button" title="Previous sample (←)" aria-label="Previous sample">│◀</button><button id="play" class="icon-button play-button" title="Play or pause (Space)" aria-label="Play">▶</button><button id="forward" class="icon-button" title="Next sample (→)" aria-label="Next sample">▶│</button><div class="time-display"><strong id="current-time">0.000</strong><span> / <span id="end-time">—</span> s</span></div></div>
+        <div class="timeline-wrap"><input id="timeline" type="range" min="0" max="100000" value="0" disabled aria-label="Timeline"><div class="timeline-labels"><span id="timeline-start">0 s</span><span id="timeline-end">—</span></div></div>
+        <div class="transport-options"><label>SPEED <select id="speed"><option value="0.1">0.1×</option><option value="0.25">0.25×</option><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="2">2×</option><option value="5">5×</option><option value="10">10×</option></select></label><label class="check"><input id="loop" type="checkbox"> LOOP</label></div>
+      </section>
+
+      <section class="plots panel" aria-label="Time series plots"><div class="panel-heading plot-heading"><div><span class="eyebrow">03 / TIME SERIES</span><h2>Simulation traces</h2></div><div class="plot-tools"><label>VIEW <select id="window-mode"><option value="full">Full history</option><option value="rolling">Rolling window</option></select></label><label>WINDOW <select id="window-size"><option value="1">1 s</option><option value="2">2 s</option><option value="5" selected>5 s</option><option value="10">10 s</option><option value="30">30 s</option><option value="60">60 s</option></select></label><button id="channels-button" class="button subtle">Channels ▾</button></div></div><div id="channel-picker" class="channel-picker" hidden></div><div id="plots-grid" class="plots-grid"></div></section>
+    </main>
+    <footer class="footer"><span>PENDULAB / VISUAL DATA INSTRUMENT</span><span id="footer-message">Open a CSV or load the project demo to begin.</span><span>SPACE: PLAY/PAUSE · ←/→: STEP · HOME: RESTART</span></footer>
+    <div id="drop-overlay" class="drop-overlay" hidden>DROP CSV DATASET TO LOAD</div>
+    <div id="message" class="message" role="alert" hidden></div>
+  </div>
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

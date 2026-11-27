@@ -1,0 +1,3 @@
+# Codex-generated visualization script
+tools/visualizer/** linguist-generated=true
+tools/plotting/** linguist-generated=true
