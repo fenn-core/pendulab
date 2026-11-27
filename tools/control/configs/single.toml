@@ -1,0 +1,16 @@
+[plant]
+M = 0.5
+m = 0.1
+l = 0.3
+g = 9.81
+
+[weights]
+x = 25.0
+theta = 100.0
+v = 1.0
+omega = 0.25
+force = 0.25
+
+[validation]
+residual_tolerance = 1e-8
+symmetry_tolerance = 1e-10
